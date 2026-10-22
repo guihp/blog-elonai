@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BookCover from "@/components/BookCover";
+import JsonLd from "@/components/JsonLd";
 import PostCard from "@/components/PostCard";
-import { formatDate, getBook, getPost, getPosts } from "@/lib/content";
+import { formatDate, getBook, getPost, getPosts, site } from "@/lib/content";
 
 export async function generateStaticParams() {
   return (await getPosts()).map((p) => ({ slug: p.slug }));
@@ -17,7 +18,14 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   return {
     title: post.title,
     description: post.excerpt,
-    openGraph: { type: "article", title: post.title, description: post.excerpt, images: [`/images/${post.image}.jpg`] },
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.date,
+      images: [`/images/${post.image}.jpg`],
+    },
   };
 }
 
@@ -35,9 +43,37 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
   if (!post) notFound();
   const book = post.book ? getBook(post.book) : undefined;
   const more = (await getPosts()).filter((p) => p.slug !== slug).slice(0, 3);
+  const url = `${site.site_url}/blog/${post.slug}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt,
+        image: `${site.site_url}/images/${post.image}.jpg`,
+        datePublished: post.date,
+        dateModified: post.date,
+        articleSection: post.category,
+        inLanguage: "en-US",
+        mainEntityOfPage: url,
+        author: { "@type": "Organization", name: "Elonai", url: site.site_url },
+        publisher: { "@id": `${site.site_url}/#org` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: site.site_url },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${site.site_url}/blog` },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
+        ],
+      },
+    ],
+  };
 
   return (
     <article>
+      <JsonLd data={ld} />
       <header className="mx-auto max-w-3xl px-4 pt-14 text-center sm:px-8">
         <Link href="/blog" className="eyebrow hover:underline">{post.category}</Link>
         <h1 className="mt-5 text-5xl leading-[1.05] sm:text-6xl">{post.title}</h1>

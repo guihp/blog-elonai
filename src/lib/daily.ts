@@ -2,6 +2,13 @@ import words from "@/content/daily-words.json";
 
 export type DailyWord = (typeof words)[number];
 
+export const dailyWords: DailyWord[] = words;
+
+// "Lamentations 3:22–23" -> "lamentations-3-22-23". Each word also has its own page at /today/<slug>.
+export const wordSlug = (w: DailyWord) => w.ref.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+export const wordBySlug = (slug: string) => dailyWords.find((w) => wordSlug(w) === slug);
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 // The visitor's local calendar date, e.g. "2026-10-21". Everyone sees the same word on the same date.

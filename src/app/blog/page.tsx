@@ -5,6 +5,7 @@ import { getPosts } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Bible-based encouragement on anxiety, prayer, the Holy Spirit, identity and everyday faith.",
+  alternates: { canonical: "/blog" },
 };
 
 export default async function BlogPage() {

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/content";
+import { getSettings } from "@/lib/settings";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy" } };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const site = await getSettings();
   return (
     <div className="mx-auto max-w-[44rem] px-4 pt-14 sm:px-8">
       <p className="eyebrow">Last updated October 2026</p>

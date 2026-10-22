@@ -1,14 +1,14 @@
 import Image from "next/image";
 import type { DailyWord } from "@/lib/daily";
 
-export default function DailyWordCard({ word, date, children }: { word: DailyWord; date: string; children?: React.ReactNode }) {
+export default function DailyWordCard({ word, date, label = "Today’s Word", children }: { word: DailyWord; date: string; label?: string; children?: React.ReactNode }) {
   return (
     <article>
       <div className="relative h-36 overflow-hidden sm:h-44">
         <Image src="/images/daily-word.jpg" alt="" fill loading="eager" sizes="(max-width: 640px) 100vw, 640px" className="object-cover object-[50%_65%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-night/75 via-night/25 to-transparent" />
         <div className="absolute bottom-5 left-6 right-6 sm:left-10">
-          <p className="eyebrow !text-gold-light">Today’s Word</p>
+          <p className="eyebrow !text-gold-light">{label}</p>
           <p className="mt-1 font-serif text-lg italic text-white/90">{date}</p>
         </div>
       </div>

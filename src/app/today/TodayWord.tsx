@@ -2,7 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import DailyWordCard from "@/components/DailyWordCard";
-import { dateLabel, shareWord, todayKey, wordFor } from "@/lib/daily";
+import { dateLabel, shareWord, todayKey, wordFor, wordSlug } from "@/lib/daily";
 
 const noop = () => () => {};
 
@@ -20,7 +20,7 @@ export default function TodayWord({ siteUrl }: { siteUrl: string }) {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <button
             className="btn btn-gold flex-1"
-            onClick={async () => (await shareWord(word, `${siteUrl}/today`)) === "copied" && setMsg("Link copied. Paste it anywhere to share.")}
+            onClick={async () => (await shareWord(word, `${siteUrl}/today/${wordSlug(word)}`)) === "copied" && setMsg("Link copied. Paste it anywhere to share.")}
           >
             Share this word
           </button>

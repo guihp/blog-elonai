@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Small Group Resources",
   description:
     "Free small group resources: leader tips, ready-to-use Bible discussion guides, icebreakers and faith-building games for home groups and life groups.",
+  alternates: { canonical: "/small-groups" },
 };
 
 const SECTIONS = [

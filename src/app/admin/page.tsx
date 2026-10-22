@@ -181,6 +181,7 @@ async function Dashboard({ searchParams }: { searchParams: PageProps<"/admin">["
               <Link key={r.days} href={`/admin?days=${r.days}`} className={`px-4 py-2 ${r.days === days ? "bg-ink text-paper" : "hover:bg-linen"}`}>{r.label}</Link>
             ))}
           </nav>
+          <Link href="/admin/settings" className="border border-line bg-white px-4 py-2 text-sm hover:bg-linen">Configurações</Link>
           <form action="/api/admin/logout" method="post">
             <button className="border border-line bg-white px-4 py-2 text-sm hover:bg-linen">Sair</button>
           </form>

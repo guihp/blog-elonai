@@ -5,6 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About",
   description: "Elonai creates free, beautifully designed devotionals rooted in the Word of God.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

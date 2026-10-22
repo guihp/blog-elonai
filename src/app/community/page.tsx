@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import NewsletterForm from "@/components/NewsletterForm";
-import { site } from "@/lib/content";
+import { getSettings } from "@/lib/settings";
 
 export const metadata: Metadata = {
   title: "Community",
   description: "A free, kind and prayerful online community reading Elonai devotionals together.",
+  alternates: { canonical: "/community" },
 };
 
 const RHYTHM = [
@@ -15,7 +16,8 @@ const RHYTHM = [
   { day: "Sunday", title: "The Sunday letter", text: "A short devotional in your inbox to start the week." },
 ];
 
-export default function CommunityPage() {
+export default async function CommunityPage() {
+  const site = await getSettings();
   return (
     <>
       <section className="relative isolate overflow-hidden">
@@ -28,7 +30,7 @@ export default function CommunityPage() {
             A free, kind and prayerful space to read the devotionals together, share what God is doing and carry one
             another’s burdens.
           </p>
-          <a href={site.community_url} target="_blank" rel="noopener" className="btn btn-gold mt-9">Join on Facebook</a>
+          <a href={site.community_url} target="_blank" rel="noopener" className="btn btn-gold mt-9">Join the community</a>
         </div>
       </section>
 

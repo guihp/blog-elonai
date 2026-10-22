@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
 import PostCard from "@/components/PostCard";
 import { books, getBook, getPosts } from "@/lib/content";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const posts = await getPosts();

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { adminConfigured, COOKIE, createSession, SESSION_HOURS, verifyPassword, verifyTotp } from "@/lib/admin-auth";
 import { clientIp } from "@/lib/analytics";
 import { rateLimit, resetLimit } from "@/lib/rate-limit";
+import { audit } from "@/lib/audit";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -32,11 +33,13 @@ export async function POST(request: Request) {
   const ok = (await verifyPassword(password)) && verifyTotp(code);
   if (!ok) {
     console.warn(`[admin] failed login from ${ip}`);
+    await audit("login.failed", ip);
     await sleep(700 + Math.random() * 500);
     return Response.json({ error: "Incorrect password or code." }, { status: 401 });
   }
 
   resetLimit(`login:${ip}`);
+  await audit("login", ip);
   (await cookies()).set(COOKIE, createSession(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

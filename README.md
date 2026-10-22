@@ -76,6 +76,8 @@ O que o painel mostra:
 
 Proteções: senha com scrypt, código 2FA de uso único, bloqueio após 5 tentativas erradas (15 min), sessão de 8h em cookie seguro, admin fora do Google.
 
+Esqueceu a senha? Rode `npm run admin:setup -- "nova senha longa"` (gera senha e 2FA novos), copie as variáveis `ADMIN_*` para a Vercel e faça um Redeploy.
+
 ## Google Search Console e Bing (grátis)
 
 Mostram o que as pessoas pesquisaram no Google/Bing antes de chegar ao blog.
@@ -84,10 +86,16 @@ Mostram o que as pessoas pesquisaram no Google/Bing antes de chegar ao blog.
 3. Em *Sitemaps*, envie `sitemap.xml`.
 4. Bing Webmaster Tools: pode importar direto do Search Console, ou usar a tag em `BING_SITE_VERIFICATION`.
 
-## Links de doação
+## Links de doação, comunidade e redes sociais
 
-Ficam em `src/content/site.json` → `donation_methods` (pode ter vários: Ko-fi, PayPal, Cash App…). Só aceita provedores aprovados (lista em `src/lib/donation.ts`).
-Ao trocar um link: rode `npm run admin:setup` de novo (atualiza `DONATION_LINKS_SHA256`) ou atualize essa variável na hospedagem — se o link mudar sem ela, o site **não publica**. Depois gere os PDFs de novo: `python book.py` e `python export_web.py` na pasta `build`.
+O jeito normal de mudar é pelo painel, em **/admin/settings**:
+- Até 3 formas de doação. Só aceita links https de provedores aprovados (lista em `src/lib/donation.ts`).
+- O QR code é gerado a partir do próprio link, então sempre leva para o mesmo lugar que o botão.
+- Para salvar, o painel pede o código do app autenticador de novo. Assim, quem roubar só a sessão não consegue trocar o link.
+- Cada login (certo ou errado) e cada alteração ficam registrados em "Atividade de segurança".
+- O site muda na hora. Os PDFs guardam o link de quando foram gerados: depois de trocar o link principal, gere os PDFs de novo (`python book.py` e `python export_web.py` na pasta `build`).
+
+`src/content/site.json` guarda os valores padrão, usados enquanto nada foi salvo no painel. Se mudar a doação ali, atualize também `DONATION_LINKS_SHA256` (rode `npm run admin:setup` de novo ou mude a variável na hospedagem), senão o site **não publica**.
 
 ## Conferir versículos
 

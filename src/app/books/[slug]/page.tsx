@@ -4,11 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BookCover from "@/components/BookCover";
+import JsonLd from "@/components/JsonLd";
 import GetBook, { DigitalOnlyNote } from "@/components/GetBook";
 import PostCard from "@/components/PostCard";
 import WaitlistForm from "@/components/WaitlistForm";
 import { books, coverSrc, getBook, getPosts, pdfSrc, site } from "@/lib/content";
 import { donateOptions } from "@/lib/qr";
+import { getSettings } from "@/lib/settings";
 
 export function generateStaticParams() {
   return books.map((b) => ({ slug: b.slug }));
@@ -18,7 +20,12 @@ export async function generateMetadata({ params }: PageProps<"/books/[slug]">): 
   const b = getBook((await params).slug);
   if (!b) return {};
   const title = `${b.title}: ${b.subtitle}`;
-  return { title, description: b.short, openGraph: { title, description: b.short, images: [coverSrc(b.slug)] } };
+  return {
+    title,
+    description: b.short,
+    alternates: { canonical: `/books/${b.slug}` },
+    openGraph: { title, description: b.short, images: [coverSrc(b.slug)] },
+  };
 }
 
 export default function BookPage({ params }: PageProps<"/books/[slug]">) {
@@ -35,6 +42,7 @@ async function BookContent({ params }: { params: Promise<{ slug: string }> }) {
   if (!b) notFound();
   const free = b.status === "free";
   const donate = (await donateOptions())[0];
+  const { community_url } = await getSettings();
   const related = (await getPosts()).filter((p) => p.book === slug).slice(0, 3);
   const get = (label?: string, className?: string, openOnHash = false) => (
     <GetBook
@@ -43,7 +51,7 @@ async function BookContent({ params }: { params: Promise<{ slug: string }> }) {
       subtitle={b.subtitle}
       pages={b.pages}
       pdfUrl={pdfSrc(b)!}
-      communityUrl={site.community_url}
+      communityUrl={community_url}
       donate={donate}
       label={label}
       className={className}
@@ -51,8 +59,29 @@ async function BookContent({ params }: { params: Promise<{ slug: string }> }) {
     />
   );
 
+  const url = `${site.site_url}/books/${b.slug}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: `${b.title}: ${b.subtitle}`,
+    description: b.short,
+    image: `${site.site_url}${coverSrc(b.slug)}`,
+    url,
+    inLanguage: "en-US",
+    genre: b.topic,
+    author: { "@type": "Organization", name: "Elonai", url: site.site_url },
+    publisher: { "@id": `${site.site_url}/#org` },
+    ...(free && {
+      bookFormat: "https://schema.org/EBook",
+      isAccessibleForFree: true,
+      ...(b.pages && { numberOfPages: b.pages }),
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock", url },
+    }),
+  };
+
   return (
     <>
+      <JsonLd data={ld} />
       <section className="bg-linen">
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 py-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
           <BookCover slug={b.slug} title={b.title} preload sizes="(max-width: 1024px) 70vw, 420px" className="mx-auto w-[min(72vw,400px)] animate-rise" />

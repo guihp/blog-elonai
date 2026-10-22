@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import DailyWordPopup from "@/components/DailyWordPopup";
 import Analytics from "@/components/Analytics";
 import { site } from "@/lib/content";
+import { getSettings } from "@/lib/settings";
+import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -31,16 +33,47 @@ export const metadata: Metadata = {
   },
 };
 
+async function SiteAnalytics() {
+  return <Analytics communityUrl={(await getSettings()).community_url} />;
+}
+
+const WEBSITE_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site.site_url}/#org`,
+      name: "Elonai",
+      url: site.site_url,
+      logo: `${site.site_url}/logo.png`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.site_url}/#website`,
+      name: "Elonai",
+      url: site.site_url,
+      inLanguage: "en-US",
+      publisher: { "@id": `${site.site_url}/#org` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: { "@type": "EntryPoint", urlTemplate: `${site.site_url}/search?q={search_term_string}` },
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable} antialiased`}>
       <body className="min-h-screen flex flex-col">
+        <JsonLd data={WEBSITE_LD} />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
         <Suspense fallback={null}>
           <DailyWordPopup siteUrl={site.site_url} />
-          <Analytics communityUrl={site.community_url} />
+          <SiteAnalytics />
         </Suspense>
       </body>
     </html>

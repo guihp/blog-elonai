@@ -96,8 +96,12 @@ export function geo(h: Headers) {
   };
 }
 
+// Only trust the header the current host sets itself: a visitor can send any of the others to fake a new IP
+// (and dodge the login rate limit).
 export function clientIp(h: Headers) {
-  return h.get("x-nf-client-connection-ip") ?? h.get("cf-connecting-ip") ?? h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",")[0].trim() ?? "local";
+  if (process.env.VERCEL) return h.get("x-real-ip") ?? "unknown";
+  if (process.env.NETLIFY) return h.get("x-nf-client-connection-ip") ?? "unknown";
+  return h.get("cf-connecting-ip") ?? h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",")[0].trim() ?? "local";
 }
 
 export function visitorHash(ip: string, ua: string) {

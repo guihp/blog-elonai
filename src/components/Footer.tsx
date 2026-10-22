@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { site } from "@/lib/content";
+import { getSettings } from "@/lib/settings";
 import NewsletterForm from "./NewsletterForm";
 
-export default function Footer() {
+export default async function Footer() {
+  const site = await getSettings();
   const socials = Object.entries(site.socials).filter(([, url]) => url);
   return (
     <footer className="mt-24 bg-night text-[#e9dfcf]">
@@ -36,7 +37,7 @@ export default function Footer() {
           <div>
             <p className="eyebrow !text-gold-light">Stay close</p>
             <ul className="mt-5 space-y-3 text-[#cfc3b2]">
-              <li><a href={site.community_url} target="_blank" rel="noopener" className="hover:text-white">Facebook community</a></li>
+              <li><a href={site.community_url} target="_blank" rel="noopener" className="hover:text-white">Our community group</a></li>
               {socials.map(([name, url]) => (
                 <li key={name}><a href={url} target="_blank" rel="noopener" className="hover:text-white">{name}</a></li>
               ))}

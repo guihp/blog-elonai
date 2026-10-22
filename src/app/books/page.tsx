@@ -6,6 +6,7 @@ import { books } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Free Christian Devotionals",
   description: "Beautifully designed, Bible-based devotionals and prayer journals. Free to download, print and share.",
+  alternates: { canonical: "/books" },
 };
 
 export default function BooksPage() {

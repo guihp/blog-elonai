@@ -6,6 +6,7 @@ import { donateOptions } from "@/lib/qr";
 export const metadata: Metadata = {
   title: "Give",
   description: "Every Elonai devotional is free. Your gift helps us create new resources and put them in the hands of people who need them.",
+  alternates: { canonical: "/give" },
 };
 
 export default async function GivePage() {

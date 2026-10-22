@@ -59,20 +59,28 @@ export default function Header() {
           <Suspense fallback={<DesktopLinks pathname="" />}>
             <ActiveDesktopLinks />
           </Suspense>
+          <Link href="/search" aria-label="Search" className="-mx-2 p-2 text-ink-soft hover:text-gold-dark">
+            <SearchIcon />
+          </Link>
           <Link href="/give" className="btn btn-line !py-2.5 !px-5">
             Give
           </Link>
         </nav>
 
-        <button
-          className="lg:hidden -mr-2 p-2"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span className={`block h-px w-6 bg-ink transition ${open ? "translate-y-[3.5px] rotate-45" : ""}`} />
-          <span className={`mt-1.5 block h-px w-6 bg-ink transition ${open ? "-translate-y-[3.5px] -rotate-45" : ""}`} />
-        </button>
+        <div className="flex items-center gap-1 lg:hidden">
+          <Link href="/search" aria-label="Search" className="p-2 text-ink-soft" onClick={() => setOpen(false)}>
+            <SearchIcon />
+          </Link>
+          <button
+            className="-mr-2 p-2"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((o) => !o)}
+          >
+            <span className={`block h-px w-6 bg-ink transition ${open ? "translate-y-[3.5px] rotate-45" : ""}`} />
+            <span className={`mt-1.5 block h-px w-6 bg-ink transition ${open ? "-translate-y-[3.5px] -rotate-45" : ""}`} />
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -85,5 +93,14 @@ export default function Header() {
         </nav>
       )}
     </header>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m16 16 4.5 4.5" strokeLinecap="round" />
+    </svg>
   );
 }
