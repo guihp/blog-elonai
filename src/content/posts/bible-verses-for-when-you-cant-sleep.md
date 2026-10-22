@@ -9,9 +9,9 @@ book: "anchored"
 
 It’s late. The house is quiet, but your mind isn’t. You’ve replayed the conversation, the bill, the diagnosis, the what-ifs. You’ve checked the clock three times.
 
-Sleeplessness is one of the loneliest feelings there is. But the Bible is full of people who prayed in the night, and of a God who “shall neither slumber nor sleep” (Psalm 121:4). He is awake with you.
+Lying awake can be very lonely. But the Bible is full of people who prayed in the night, and of a God who “shall neither slumber nor sleep” (Psalm 121:4). He is awake with you.
 
-Here are twelve verses to read slowly, pray, or simply repeat in the dark.
+Here are twelve verses you can read slowly, pray, or just repeat to yourself in the dark.
 
 ## When your mind is racing
 
@@ -43,10 +43,10 @@ Here are twelve verses to read slowly, pray, or simply repeat in the dark.
 
 **11. Psalm 23:1–2.** “The LORD is my shepherd; I shall not want. He maketh me to lie down in green pastures: he leadeth me beside the still waters.”
 
-**12. Psalm 3:5.** “I laid me down and slept; I awaked; for the LORD sustained me.” David wrote this while running for his life from his own son. If he could sleep then, God can give rest to you too.
+**12. Psalm 3:5.** “I laid me down and slept; I awaked; for the LORD sustained me.” David wrote this while running for his life from his own son. If God gave him sleep then, He can give it to you too.
 
 ## A simple way to use these verses
 
-Choose one verse and keep it on your nightstand. When you wake up anxious, don’t pick up your phone. Instead, read the verse slowly, then pray it back to God in your own words: *“Lord, You make me dwell in safety. I lay this down in peace.”* Breathe slowly. If your mind wanders, gently return to the verse.
+Choose one verse and keep it on your nightstand. When you wake up anxious, leave your phone where it is. Read the verse slowly, then pray it back to God in your own words: *“Lord, You make me dwell in safety. I lay this down in peace.”* Breathe slowly, and if your mind wanders, go back to the verse.
 
-And if sleepless nights have become the norm for you, talk to your doctor. Caring for your body is part of caring for your soul. Remember how God cared for the exhausted prophet Elijah: before anything else, He gave him food and sleep (1 Kings 19:5–7).
+And if sleepless nights have become normal for you, talk to your doctor. Your body matters to God too. Remember how God cared for the exhausted prophet Elijah: before anything else, He gave him food and sleep (1 Kings 19:5–7).
