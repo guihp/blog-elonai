@@ -4,16 +4,18 @@ import { notFound } from "next/navigation";
 import DailyWordCard from "@/components/DailyWordCard";
 import JsonLd from "@/components/JsonLd";
 import { site } from "@/lib/content";
-import { dailyWords, wordBySlug, wordSlug } from "@/lib/daily";
+import { wordSlug } from "@/lib/daily";
+import { getDailyWords, getWordPage } from "@/lib/daily-words";
 import ShareWord from "./ShareWord";
 
-export function generateStaticParams() {
-  return dailyWords.map((w) => ({ slug: wordSlug(w) }));
+export async function generateStaticParams() {
+  return (await getDailyWords()).map((w) => ({ slug: wordSlug(w) }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/today/[slug]">): Promise<Metadata> {
-  const word = wordBySlug((await params).slug);
-  if (!word) return {};
+  const page = await getWordPage((await params).slug);
+  if (!page) return {};
+  const { word } = page;
   const title = `${word.title} (${word.ref})`;
   const description = `“${word.verse}” A short devotional and prayer on ${word.ref}.`.slice(0, 300);
   return {
@@ -25,11 +27,10 @@ export async function generateMetadata({ params }: PageProps<"/today/[slug]">): 
 }
 
 export default async function DailyWordPage({ params }: PageProps<"/today/[slug]">) {
-  const word = wordBySlug((await params).slug);
-  if (!word) notFound();
-  const i = dailyWords.indexOf(word);
-  const prev = dailyWords[(i + dailyWords.length - 1) % dailyWords.length];
-  const next = dailyWords[(i + 1) % dailyWords.length];
+  const { slug } = await params;
+  const page = await getWordPage(slug);
+  if (!page) notFound();
+  const { word, prev, next } = page;
   const url = `${site.site_url}/today/${wordSlug(word)}`;
 
   return (

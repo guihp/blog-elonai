@@ -24,7 +24,9 @@ npm run build      # confere se está tudo certo antes de publicar
 
 ## Publicar um post novo
 
-Crie `src/content/posts/meu-post.md`:
+O jeito mais fácil é pelo painel, em **/admin/posts** → *Novo post*: escreva em Markdown, veja a prévia, escolha uma imagem pronta ou envie uma foto (JPG, PNG ou WebP, até 4 MB) e marque *Publicado*. Ao salvar, os versículos citados como “…” (Livro 1:2) são conferidos com a KJV e os que não batem aparecem em vermelho. Logo depois de publicar, a página do post pode levar alguns segundos para aparecer; se abrir "not found", recarregue.
+
+Também dá para criar pelo código, em `src/content/posts/meu-post.md`:
 
 ```md
 ---
@@ -67,7 +69,15 @@ Suba a pasta `web/` para um repositório no GitHub → vercel.com → *Add New P
 2. Reinicie o `npm run dev` e entre em `/admin`.
 3. No Netlify/Vercel, copie as mesmas variáveis de `.env.local` (ADMIN_*, ANALYTICS_SALT, DONATION_LINKS_SHA256) em Environment variables.
 
-O que o painel mostra:
+Páginas do painel:
+- **Visitas**: os números abaixo.
+- **Inscritos**: todo mundo que baixou um livro ou entrou na lista, com busca, filtro e botão *Baixar CSV* (abre no Excel/Google Sheets).
+- **Pedidos de oração**: os pedidos enviados pelo site; marque *Orei por este pedido* para separar os que faltam.
+- **Posts**: escrever, editar, despublicar e apagar posts do blog.
+- **Palavras diárias**: editar a lista da palavra do dia. O versículo precisa bater com a KJV (ou marque *salvar mesmo assim*). Palavras novas entram no fim da fila.
+- **Configurações**: links de doação, comunidade, email e redes sociais.
+
+O que a página de visitas mostra:
 - **Funil de conversão**: visitou → abriu a página de um livro → abriu o formulário → cadastrou → baixou o PDF.
 - **Conversão por origem e por campanha**: quais redes e links trazem gente que baixa, não só cliques.
 - **Desempenho por livro**, **pesquisa com leitores** (3 perguntas opcionais no formulário; as opções ficam em `src/lib/survey.ts`) e **leitura das páginas** (tempo típico e quantos leram até o fim).
@@ -93,7 +103,7 @@ O jeito normal de mudar é pelo painel, em **/admin/settings**:
 - O QR code é gerado a partir do próprio link, então sempre leva para o mesmo lugar que o botão.
 - Para salvar, o painel pede o código do app autenticador de novo. Assim, quem roubar só a sessão não consegue trocar o link.
 - Cada login (certo ou errado) e cada alteração ficam registrados em "Atividade de segurança".
-- O site muda na hora. Os PDFs guardam o link de quando foram gerados: depois de trocar o link principal, gere os PDFs de novo (`python book.py` e `python export_web.py` na pasta `build`).
+- O site muda na hora. Os PDFs e os emails não guardam o link de doação: eles apontam para `/donate` e `/join` do site, que redirecionam para o link salvo no painel. Por isso não é preciso gerar os PDFs de novo quando o link muda. Os cliques aparecem no painel com a origem (`?from=pdf-anchored`, `?from=email`).
 
 `src/content/site.json` guarda os valores padrão, usados enquanto nada foi salvo no painel. Se mudar a doação ali, atualize também `DONATION_LINKS_SHA256` (rode `npm run admin:setup` de novo ou mude a variável na hospedagem), senão o site **não publica**.
 

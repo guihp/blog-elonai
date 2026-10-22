@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import DailyWordCard from "./DailyWordCard";
-import { dateLabel, shareWord, todayKey, wordFor, type DailyWord } from "@/lib/daily";
+import { dateLabel, fetchWord, shareWord, todayKey, wordSlug, type DailyWord } from "@/lib/daily";
 
 const SEEN_KEY = "elonai_word_seen";
 
@@ -17,14 +17,16 @@ export default function DailyWordPopup({ siteUrl }: { siteUrl: string }) {
 
   useEffect(() => {
     if (pathname === "/today" || pathname.startsWith("/admin")) return;
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       const key = todayKey();
       let seen: string | null = null;
       try {
         seen = localStorage.getItem(SEEN_KEY);
       } catch {}
       if (seen === key || window.location.hash === "#get" || document.querySelector("dialog[open]")) return;
-      setToday({ key, word: wordFor(key) });
+      const word = await fetchWord(key);
+      if (!word || document.querySelector("dialog[open]")) return;
+      setToday({ key, word });
       dialog.current?.showModal();
       try {
         localStorage.setItem(SEEN_KEY, key);
@@ -35,7 +37,7 @@ export default function DailyWordPopup({ siteUrl }: { siteUrl: string }) {
 
   async function onShare() {
     if (!today) return;
-    const r = await shareWord(today.word, `${siteUrl}/today`);
+    const r = await shareWord(today.word, `${siteUrl}/today/${wordSlug(today.word)}`);
     if (r === "copied") setShareMsg("Link copied. Paste it anywhere to share.");
   }
 

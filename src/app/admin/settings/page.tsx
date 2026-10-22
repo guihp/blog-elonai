@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { COOKIE, totpEnabled, verifySession } from "@/lib/admin-auth";
+import { totpEnabled } from "@/lib/admin-auth";
+import { requireAdminPage } from "@/lib/admin-guard";
 import { recentAudit, type AuditRow } from "@/lib/audit";
 import { displayUrl } from "@/lib/donation";
 import { donateOptions } from "@/lib/qr";
 import { getSettings, MAX_DONATIONS, SOCIAL_HOSTS } from "@/lib/settings";
+import AdminNav from "../AdminNav";
 import SettingsForm from "./SettingsForm";
 
 export const metadata: Metadata = { title: "Configurações", robots: { index: false, follow: false } };
@@ -48,21 +47,12 @@ function describe(row: AuditRow) {
 }
 
 async function Settings() {
-  if (!verifySession((await cookies()).get(COOKIE)?.value)) redirect("/admin/login");
+  await requireAdminPage();
   const [settings, options, log] = await Promise.all([getSettings(), donateOptions(), recentAudit()]);
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-10 pt-10 sm:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <p className="eyebrow">Painel Elonai</p>
-          <h1 className="mt-2 text-5xl">Configurações</h1>
-        </div>
-        <nav className="flex border border-line bg-white text-sm">
-          <Link href="/admin" className="px-4 py-2 hover:bg-linen">Visitas</Link>
-          <span className="bg-ink px-4 py-2 text-paper">Configurações</span>
-        </nav>
-      </div>
+      <AdminNav current="/admin/settings" title="Configurações" />
 
       <section className="mt-8 border border-line bg-white p-6">
         <h2 className="text-2xl">Como está no site agora</h2>
@@ -77,8 +67,9 @@ async function Settings() {
           ))}
         </div>
         <p className="mt-5 border-l-2 border-gold pl-3 text-xs text-ink-soft">
-          Os PDFs dos livros já baixados guardam o link antigo. Se trocar o link principal, me peça para gerar os PDFs de
-          novo.
+          Os livros em PDF e os emails apontam para <b>/donate</b> e <b>/join</b> aqui do site, que levam sempre para a
+          primeira doação e para o grupo salvos nesta página. Ao trocar aqui, os livros (inclusive os já baixados desde
+          22/10/2026) passam a abrir o link novo.
         </p>
       </section>
 

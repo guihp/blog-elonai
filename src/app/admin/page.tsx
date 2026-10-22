@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { COOKIE, verifySession } from "@/lib/admin-auth";
+import { requireAdminPage } from "@/lib/admin-guard";
 import { loadHits, loadSignups, type Hit } from "@/lib/analytics";
 import { books, getPosts, site } from "@/lib/content";
 import { SURVEY, SURVEY_FIELDS } from "@/lib/survey";
+import AdminNav from "./AdminNav";
 import UtmBuilder from "./UtmBuilder";
 
 export const metadata: Metadata = { title: "Painel", robots: { index: false, follow: false } };
@@ -148,7 +147,7 @@ async function getReport(days: number) {
 
 async function Dashboard({ searchParams }: { searchParams: PageProps<"/admin">["searchParams"] }) {
   // Second lock after proxy.ts: never render data without a valid session.
-  if (!verifySession((await cookies()).get(COOKIE)?.value)) redirect("/admin/login");
+  await requireAdminPage();
 
   const sp = await searchParams;
   const days = RANGES.find((r) => String(r.days) === sp.days)?.days ?? 30;
@@ -170,23 +169,13 @@ async function Dashboard({ searchParams }: { searchParams: PageProps<"/admin">["
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-10 pt-10 sm:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <p className="eyebrow">Painel Elonai</p>
-          <h1 className="mt-2 text-5xl">Visitas e acessos</h1>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <nav className="flex border border-line bg-white text-sm" aria-label="Período">
-            {RANGES.map((r) => (
-              <Link key={r.days} href={`/admin?days=${r.days}`} className={`px-4 py-2 ${r.days === days ? "bg-ink text-paper" : "hover:bg-linen"}`}>{r.label}</Link>
-            ))}
-          </nav>
-          <Link href="/admin/settings" className="border border-line bg-white px-4 py-2 text-sm hover:bg-linen">Configurações</Link>
-          <form action="/api/admin/logout" method="post">
-            <button className="border border-line bg-white px-4 py-2 text-sm hover:bg-linen">Sair</button>
-          </form>
-        </div>
-      </div>
+      <AdminNav current="/admin" title="Visitas e acessos">
+        <nav className="flex border border-line bg-white text-sm" aria-label="Período">
+          {RANGES.map((r) => (
+            <Link key={r.days} href={`/admin?days=${r.days}`} className={`px-4 py-2 ${r.days === days ? "bg-ink text-paper" : "hover:bg-linen"}`}>{r.label}</Link>
+          ))}
+        </nav>
+      </AdminNav>
 
       {local && (
         <p className="mt-6 border-l-2 border-gold bg-linen px-4 py-3 text-sm text-ink-soft">

@@ -82,3 +82,30 @@ alter table public.site_settings enable row level security;
 alter table public.admin_audit enable row level security;
 revoke all on public.site_settings, public.admin_audit from anon, authenticated;
 grant select, insert, update, delete on public.site_settings, public.admin_audit to service_role;
+
+-- Blog posts written in /admin/posts. Posts in src/content/posts/*.md keep working; a database post
+-- with the same slug as a file is ignored. site_settings also holds key 'daily_words' after the first edit in /admin/words.
+create table if not exists public.posts (
+  id          uuid primary key default gen_random_uuid(),
+  slug        text not null unique check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(slug) <= 100),
+  title       text not null check (char_length(title) between 1 and 160),
+  excerpt     text not null check (char_length(excerpt) <= 400),
+  category    text not null check (char_length(category) <= 60),
+  image       text not null check (char_length(image) <= 400),
+  book        text check (char_length(book) <= 40),
+  body        text not null check (char_length(body) <= 60000),
+  published   boolean not null default false,
+  date        date not null default current_date,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+create index if not exists posts_published_date_idx on public.posts (published, date desc);
+
+alter table public.posts enable row level security;
+revoke all on public.posts from anon, authenticated;
+grant select, insert, update, delete on public.posts to service_role;
+
+-- Public bucket for blog images uploaded from /admin/posts. Anyone can view; only the server (service role) can write.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('post-images', 'post-images', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do nothing;

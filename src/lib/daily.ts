@@ -1,13 +1,10 @@
-import words from "@/content/daily-words.json";
+// Helpers shared by the server and the browser. The list itself comes from getDailyWords() (lib/daily-words.ts):
+// daily-words.json by default, or the version edited in /admin/words.
 
-export type DailyWord = (typeof words)[number];
-
-export const dailyWords: DailyWord[] = words;
+export type DailyWord = { ref: string; verse: string; title: string; message: string[]; prayer: string };
 
 // "Lamentations 3:22–23" -> "lamentations-3-22-23". Each word also has its own page at /today/<slug>.
-export const wordSlug = (w: DailyWord) => w.ref.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
-export const wordBySlug = (slug: string) => dailyWords.find((w) => wordSlug(w) === slug);
+export const wordSlug = (w: Pick<DailyWord, "ref">) => w.ref.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -17,11 +14,23 @@ export function todayKey() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-// Walks through daily-words.json one entry per day; add entries to the JSON to lengthen the cycle.
-export function wordFor(key: string): DailyWord {
+export const isDateKey = (key: string) => /^\d{4}-\d{2}-\d{2}$/.test(key);
+
+// Walks through the list one entry per day; adding words lengthens the cycle.
+export function wordFor(words: DailyWord[], key: string): DailyWord {
   const [y, m, d] = key.split("-").map(Number);
   const day = Math.floor(Date.UTC(y, m - 1, d) / 86_400_000);
   return words[day % words.length];
+}
+
+// Browser side: asks the server for the word of the visitor's local date.
+export async function fetchWord(key: string): Promise<DailyWord | null> {
+  try {
+    const res = await fetch(`/api/word?d=${key}`);
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
 }
 
 export function dateLabel(key: string) {

@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import BookCover from "@/components/BookCover";
 import JsonLd from "@/components/JsonLd";
 import PostCard from "@/components/PostCard";
-import { formatDate, getBook, getPost, getPosts, site } from "@/lib/content";
+import { absoluteImage, formatDate, getBook, getPost, getPosts, postImage, site } from "@/lib/content";
 
 export async function generateStaticParams() {
   return (await getPosts()).map((p) => ({ slug: p.slug }));
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
       title: post.title,
       description: post.excerpt,
       publishedTime: post.date,
-      images: [`/images/${post.image}.jpg`],
+      images: [postImage(post.image)],
     },
   };
 }
@@ -51,7 +51,7 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
         "@type": "BlogPosting",
         headline: post.title,
         description: post.excerpt,
-        image: `${site.site_url}/images/${post.image}.jpg`,
+        image: absoluteImage(post.image),
         datePublished: post.date,
         dateModified: post.date,
         articleSection: post.category,
@@ -83,7 +83,7 @@ async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
       </header>
       <div className="relative mx-auto mt-12 aspect-[16/9] max-w-6xl overflow-hidden sm:px-8">
         <div className="relative h-full w-full overflow-hidden">
-          <Image src={`/images/${post.image}.jpg`} alt="" fill preload sizes="(max-width: 1200px) 100vw, 1150px" className="object-cover" />
+          <Image src={postImage(post.image)} alt="" fill preload sizes="(max-width: 1200px) 100vw, 1150px" className="object-cover" />
         </div>
       </div>
 

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
 import { site } from "@/lib/content";
-import { dailyWords, wordSlug } from "@/lib/daily";
+import { wordSlug } from "@/lib/daily";
+import { getDailyWords } from "@/lib/daily-words";
 import TodayWord from "./TodayWord";
 
 export const metadata: Metadata = {
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/today" },
 };
 
-export default function TodayPage() {
+export default async function TodayPage() {
+  const dailyWords = await getDailyWords();
   return (
     <div className="mx-auto max-w-2xl px-4 pt-12 sm:px-8">
       <header className="mb-10 text-center">

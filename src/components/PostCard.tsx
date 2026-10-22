@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate, type Post } from "@/lib/content";
+import { formatDate, postImage, type Post } from "@/lib/content";
 
 export default function PostCard({ post, large = false }: { post: Post; large?: boolean }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
       <div className={`relative overflow-hidden bg-sand ${large ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
         <Image
-          src={`/images/${post.image}.jpg`}
+          src={postImage(post.image)}
           alt=""
           fill
           sizes={large ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 768px) 100vw, 33vw"}

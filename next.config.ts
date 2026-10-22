@@ -38,8 +38,20 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
+// Blog pictures uploaded from /admin/posts live in the Supabase "post-images" bucket and go through next/image.
+const supabaseHost = process.env.SUPABASE_URL ? new URL(process.env.SUPABASE_URL).hostname : "";
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // The blog reads src/content/posts at run time too (after an edit in the admin panel), so ship those files.
+  outputFileTracingIncludes: { "/**": ["./src/content/posts/**"] },
+  images: {
+    remotePatterns: supabaseHost ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/post-images/**" }] : [],
+  },
+  experimental: {
+    // Room for one resized blog picture (the editor shrinks photos before sending; Vercel caps requests at 4.5 MB).
+    serverActions: { bodySizeLimit: "4mb" },
+  },
   partialPrefetching: true,
   poweredByHeader: false,
   async headers() {

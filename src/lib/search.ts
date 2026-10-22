@@ -1,5 +1,6 @@
 import { books, getPosts } from "./content";
-import { dailyWords, wordSlug } from "./daily";
+import { wordSlug } from "./daily";
+import { getDailyWords } from "./daily-words";
 
 export type Result = { href: string; kind: string; title: string; snippet: string; score: number };
 
@@ -34,7 +35,7 @@ export async function search(query: string): Promise<Result[]> {
       body: [b.description, b.inside, b.weeks?.map((w) => w.desc)].flat(2).filter(Boolean).join(" "),
       boost: 4,
     })),
-    ...dailyWords.map((w) => ({ href: `/today/${wordSlug(w)}`, kind: `Daily word · ${w.ref}`, title: w.title, lead: `${w.ref} ${w.verse}`, body: `${w.message.join(" ")} ${w.prayer}`, boost: 1 })),
+    ...(await getDailyWords()).map((w) => ({ href: `/today/${wordSlug(w)}`, kind: `Daily word · ${w.ref}`, title: w.title, lead: `${w.ref} ${w.verse}`, body: `${w.message.join(" ")} ${w.prayer}`, boost: 1 })),
   ];
 
   return docs
