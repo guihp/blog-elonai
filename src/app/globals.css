@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* Elonai editorial palette: linen, ink and the gold of the logo */
+@theme {
+  --color-paper: #fbf8f2;
+  --color-linen: #f3ecdf;
+  --color-sand: #e9dfcd;
+  --color-ink: #2b2420;
+  --color-ink-soft: #4d433b;
+  --color-muted: #6e6259;
+  --color-line: #e3d8c6;
+  --color-gold: #a5743c;
+  --color-gold-dark: #7a5429;
+  --color-gold-light: #d9c3a0;
+  --color-sage: #7f8a6f;
+  --color-night: #221c18;
+
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
+
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01em; }
+  ::selection { background: var(--color-gold-light); color: var(--color-ink); }
+
+  /* Slim linen-and-gold scrollbars everywhere (Firefox + Chromium/Safari) */
+  * { scrollbar-width: thin; scrollbar-color: var(--color-gold-light) transparent; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-paper); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-gold-light); border-radius: 999px;
+    border: 3px solid var(--color-paper);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+  ::-webkit-scrollbar-corner { background: transparent; }
+}
+
+@layer components {
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--color-gold-dark);
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.95rem 1.7rem; font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+    transition: background-color .25s, color .25s, border-color .25s, transform .25s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-gold { background: var(--color-gold); color: #fff; }
+  .btn-gold:hover { background: var(--color-gold-dark); }
+  .btn-ink { background: var(--color-ink); color: var(--color-paper); }
+  .btn-ink:hover { background: #000; }
+  .btn-line { border: 1px solid var(--color-ink); color: var(--color-ink); }
+  .btn-line:hover { background: var(--color-ink); color: var(--color-paper); }
+  .field {
+    width: 100%; background: #fff; border: 1px solid var(--color-line); padding: 0.85rem 1rem; font-size: 1rem;
+    outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  .field:focus { border-color: var(--color-gold); box-shadow: 0 0 0 3px rgb(165 116 60 / 0.15); }
+  .ornament { display: flex; align-items: center; gap: 1rem; color: var(--color-gold); }
+  .ornament::before, .ornament::after { content: ""; height: 1px; flex: 1; background: var(--color-gold-light); }
+
+  /* dialogs: download gate and daily word */
+  .modal {
+    margin: auto; padding: 0; border: 0; color: var(--color-ink); background: var(--color-paper);
+    max-height: calc(100dvh - 24px); overflow-y: auto; overscroll-behavior: contain;
+    box-shadow: 0 40px 80px -20px rgb(20 14 10 / 0.55);
+    scrollbar-width: none;
+  }
+  .modal::-webkit-scrollbar { display: none; }
+  .modal[open] { animation: modal-in .45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .modal::backdrop { background: rgb(34 28 24 / 0.72); backdrop-filter: blur(4px); animation: fade-in .35s ease both; }
+  @keyframes modal-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .modal-close {
+    position: absolute; right: .75rem; top: .75rem; z-index: 10; width: 2.5rem; height: 2.5rem; border-radius: 999px;
+    font-size: 1.6rem; line-height: 1; color: var(--color-muted); transition: background-color .2s, color .2s;
+  }
+  .modal-close:hover { background: rgb(0 0 0 / 0.08); color: var(--color-ink); }
+  body:has(dialog[open]) { overflow: hidden; }
+
+  /* long-form article typography */
+  .prose-elonai { font-size: 1.125rem; line-height: 1.85; color: var(--color-ink-soft); }
+  .prose-elonai > * + * { margin-top: 1.4em; }
+  .prose-elonai h2 { font-size: 2rem; line-height: 1.2; color: var(--color-ink); margin-top: 2.2em; }
+  .prose-elonai h3 { font-size: 1.5rem; color: var(--color-ink); margin-top: 1.8em; }
+  .prose-elonai strong { color: var(--color-ink); font-weight: 600; }
+  .prose-elonai a { color: var(--color-gold-dark); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-elonai ul, .prose-elonai ol { padding-left: 1.3em; }
+  .prose-elonai ul { list-style: disc; }
+  .prose-elonai ol { list-style: decimal; }
+  .prose-elonai li + li { margin-top: 0.5em; }
+  .prose-elonai li::marker { color: var(--color-gold); }
+  .prose-elonai hr { border: 0; height: 1px; background: var(--color-line); margin: 3em 0; }
+  .prose-elonai blockquote {
+    border-left: 2px solid var(--color-gold); padding: 0.4em 0 0.4em 1.4em;
+    font-family: var(--font-serif); font-style: italic; font-size: 1.4rem; line-height: 1.5; color: var(--color-ink);
+  }
+  .prose-elonai:not(.no-dropcap) > p:first-of-type::first-letter {
+    font-family: var(--font-serif); float: left; font-size: 4.2rem; line-height: 0.8; padding: 0.35rem 0.6rem 0 0; color: var(--color-gold);
+  }
+}

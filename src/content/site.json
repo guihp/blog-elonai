@@ -1,0 +1,20 @@
+{
+  "site_name": "Elonai",
+  "site_url": "https://blog-elonai.vercel.app",
+  "donation_methods": [
+    {
+      "label": "Ko-fi",
+      "detail": "Card, Apple Pay, Google Pay or PayPal",
+      "url": "https://ko-fi.com/elonaistore"
+    }
+  ],
+  "community_url": "https://www.facebook.com/share/g/19RzFktDAT/",
+  "contact_email": "hello@elonaistore.com",
+  "socials": {
+    "Instagram": "",
+    "Pinterest": "",
+    "YouTube": "",
+    "TikTok": "",
+    "Facebook Page": ""
+  }
+}
