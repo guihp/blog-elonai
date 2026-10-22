@@ -6,6 +6,7 @@ const LINKS = [
   { href: "/admin/prayers", label: "Pedidos de oração" },
   { href: "/admin/posts", label: "Posts" },
   { href: "/admin/words", label: "Palavras diárias" },
+  { href: "/admin/social", label: "Divulgação" },
   { href: "/admin/settings", label: "Configurações" },
 ];
 

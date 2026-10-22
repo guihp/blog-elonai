@@ -109,3 +109,12 @@ grant select, insert, update, delete on public.posts to service_role;
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('post-images', 'post-images', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do nothing;
+
+-- Marks in /admin/social: which planned posts were published and which setup steps are done.
+create table if not exists public.social_done (
+  key      text primary key check (char_length(key) <= 80),
+  done_at  timestamptz not null default now()
+);
+alter table public.social_done enable row level security;
+revoke all on public.social_done from anon, authenticated;
+grant select, insert, update, delete on public.social_done to service_role;

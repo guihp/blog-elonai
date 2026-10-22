@@ -26,10 +26,13 @@ export const metadata: Metadata = {
     "Free Bible-based devotionals, prayer journals and encouragement for weary hearts. Read the blog and download beautifully designed devotionals at no cost.",
   openGraph: { type: "website", siteName: "Elonai", images: ["/images/hero-home.jpg"] },
   icons: { icon: "/logo-mark.png" },
-  // Google Search Console and Bing Webmaster Tools ownership tags (HTML tag method). Read at build time.
+  // Google Search Console, Bing Webmaster Tools and Pinterest ownership tags (HTML tag method). Read at build time.
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
-    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+    other: {
+      ...(process.env.BING_SITE_VERIFICATION && { "msvalidate.01": process.env.BING_SITE_VERIFICATION }),
+      ...(process.env.PINTEREST_SITE_VERIFICATION && { "p:domain_verify": process.env.PINTEREST_SITE_VERIFICATION }),
+    },
   },
 };
 

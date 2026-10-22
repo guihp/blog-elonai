@@ -76,6 +76,7 @@ Páginas do painel:
 - **Posts**: escrever, editar, despublicar e apagar posts do blog.
 - **Palavras diárias**: editar a lista da palavra do dia. O versículo precisa bater com a KJV (ou marque *salvar mesmo assim*). Palavras novas entram no fim da fila.
 - **Configurações**: links de doação, comunidade, email e redes sociais.
+- **Divulgação**: os posts de cada dia para a Página do Facebook (e Instagram), o grupo e o Pinterest, com prompt de imagem para o ChatGPT, texto, 1º comentário com link e datas comemorativas dos EUA. Em *Guia* ficam os textos para configurar Página, Messenger, grupo e Pinterest. Os textos ficam em `src/content/social.ts`; depois de mexer nos versículos, rode `node scripts/check-social-verses.mjs`.
 
 O que a página de visitas mostra:
 - **Funil de conversão**: visitou → abriu a página de um livro → abriu o formulário → cadastrou → baixou o PDF.
@@ -95,6 +96,7 @@ Mostram o que as pessoas pesquisaram no Google/Bing antes de chegar ao blog.
 2. Copie só o código de dentro de `content="…"` e coloque em `GOOGLE_SITE_VERIFICATION` na Vercel/Netlify. Publique de novo (a tag entra no build) e clique em *Verificar*.
 3. Em *Sitemaps*, envie `sitemap.xml`.
 4. Bing Webmaster Tools: pode importar direto do Search Console, ou usar a tag em `BING_SITE_VERIFICATION`.
+5. Pinterest: código da tag HTML em `PINTEREST_SITE_VERIFICATION`.
 
 ## Links de doação, comunidade e redes sociais
 
